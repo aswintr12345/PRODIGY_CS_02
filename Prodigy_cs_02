@@ -1,0 +1,41 @@
+import tkinter as tk
+from tkinter import filedialog, messagebox
+from PIL import Image
+
+
+# Simple function to swap R and B values (encryption)
+def encrypt_decrypt_image(image_path, action):
+    image = Image.open(image_path)
+    pixels = image.load()
+
+    # Swap R and B values for encryption and decryption
+    for y in range(image.height):
+        for x in range(image.width):
+            r, g, b = pixels[x, y]
+            pixels[x, y] = (b, g, r)  # Swap Red and Blue channels
+
+    new_image_path = f"{action}_image.png"
+    image.save(new_image_path)
+    messagebox.showinfo("Success", f"Image {action}ed and saved as {new_image_path}")
+
+
+# Function to open a file dialog and select an image
+def browse_image(action):
+    file_path = filedialog.askopenfilename(filetypes=[("Image Files", "*.png *.jpg")])
+    if file_path:
+        encrypt_decrypt_image(file_path, action)
+
+
+# Create the main window
+root = tk.Tk()
+root.title("Simple Image Encryption Tool")
+
+# Create buttons to encrypt and decrypt images
+encrypt_button = tk.Button(root, text="Encrypt Image", command=lambda: browse_image("encrypt"))
+encrypt_button.pack(pady=10)
+
+decrypt_button = tk.Button(root, text="Decrypt Image", command=lambda: browse_image("decrypt"))
+decrypt_button.pack(pady=10)
+
+# Run the Tkinter event loop
+root.mainloop()
